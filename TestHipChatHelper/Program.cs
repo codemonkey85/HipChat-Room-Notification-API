@@ -7,12 +7,6 @@ namespace TestHipChatHelper
     {
         private static void Main(string[] args)
         {
-            foreach (string s in args)
-            {
-                Console.WriteLine(s);
-            }
-            Console.WriteLine("Number of arguments: {0}", args.Length);
-
             try
             {
                 HipChatHelper hipChatHelper;

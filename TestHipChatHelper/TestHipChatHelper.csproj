@@ -43,7 +43,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="TestHipChatHelper.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
