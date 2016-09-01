@@ -7,36 +7,47 @@ namespace HipChat_Notification_API
 {
     public class HipChatHelper
     {
-        public string ApiUrl { get; set; }
-        public string AuthToken { get; set; }
+        private HipChatHelperSettings _settings = new HipChatHelperSettings();
 
         public HipChatHelper()
         {
-            ApiUrl = string.Empty;
-            AuthToken = string.Empty;
+            _settings.ApiUrl = string.Empty;
+            _settings.AuthToken = string.Empty;
+            _settings.RoomId = string.Empty;
         }
 
-        public HipChatHelper(string apiUrl, string authToken)
+        public HipChatHelper(string apiUrl, string authToken, string roomId = "")
         {
-            ApiUrl = apiUrl;
-            AuthToken = authToken;
+            _settings.ApiUrl = apiUrl;
+            _settings.AuthToken = authToken;
+            _settings.RoomId = roomId;
         }
 
-        public bool SendNotification(string message, string roomId, string messageFormat = "text", string color = "green", bool notify = false)
+        public void LoadSettings()
+        {
+            _settings.LoadSettings();
+        }
+
+        public void SaveSettings()
+        {
+            _settings.SaveSettings();
+        }
+
+        public bool SendNotification(string message, string messageFormat = "text", string color = "green", bool notify = false)
         {
             string refResponse = null;
-            return SendNotification(message, roomId, messageFormat, color, notify, ref refResponse);
+            return SendNotification(message, messageFormat, color, notify, ref refResponse);
         }
 
-        public bool SendNotification(string message, string roomId, string messageFormat, string color, bool notify, ref string response)
+        public bool SendNotification(string message, string messageFormat, string color, bool notify, ref string response)
         {
-            if (string.IsNullOrEmpty(ApiUrl.Trim()))
+            if (string.IsNullOrEmpty(_settings.ApiUrl.Trim()))
                 throw new Exception("API Url must not be empty!");
-            if (string.IsNullOrEmpty(AuthToken.Trim()))
+            if (string.IsNullOrEmpty(_settings.AuthToken.Trim()))
                 throw new Exception("API Token must not be empty!");
             if (string.IsNullOrEmpty(message.Trim()))
                 throw new Exception("Message must not be empty!");
-            if (string.IsNullOrEmpty(roomId.Trim()))
+            if (string.IsNullOrEmpty(_settings.RoomId.Trim()))
                 throw new Exception("Room Id must not be empty!");
 
             if (response == null) response = string.Empty;
@@ -49,7 +60,7 @@ namespace HipChat_Notification_API
                 notify
             });
             string webResponse = string.Empty;
-            return SendWebRequest(string.Format(ApiUrl, roomId, AuthToken), json, ref webResponse);
+            return SendWebRequest(string.Format(_settings.ApiUrl, _settings.RoomId, _settings.AuthToken), json, ref webResponse);
         }
 
         private bool SendWebRequest(string apiUrl, string json, ref string response)

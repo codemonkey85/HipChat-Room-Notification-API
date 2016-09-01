@@ -7,24 +7,32 @@ namespace TestHipChatHelper
     {
         private static void Main(string[] args)
         {
+            foreach (string s in args)
+            {
+                Console.WriteLine(s);
+            }
+            Console.WriteLine("Number of arguments: {0}", args.Length);
+
             try
             {
-                if (args == null || args.Length <= 4)
-                    throw new Exception("Must supply API Url, Auth Token, and Room Id as arguments!");
-
-                string apiUrl = args[1];
-                string authToken = args[2];
-                string roomId = args[3];
-
-                HipChatHelper hipChatHelper = new HipChatHelper
+                HipChatHelper hipChatHelper;
+                if (args.Length < 3)
                 {
-                    ApiUrl = apiUrl,
-                    AuthToken = authToken
-                };
+                    hipChatHelper = new HipChatHelper();
+                    hipChatHelper.LoadSettings();
+                }
+                else
+                {
+                    string apiUrl = args[0];
+                    string authToken = args[1];
+                    string roomId = args[2];
+                    hipChatHelper = new HipChatHelper(apiUrl, authToken, roomId);
+                }
 
                 const string message = @"testing HipChatHelper";
 
-                hipChatHelper.SendNotification(message, roomId, notify: true);
+                hipChatHelper.SendNotification(message, notify: true);
+                hipChatHelper.SaveSettings();
             }
             catch (Exception ex)
             {
